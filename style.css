@@ -49,6 +49,7 @@ h1 {
   letter-spacing: -.05em;
 }
 .subtitle { color: var(--muted); margin: 12px 0 0; font-size: 1.02rem; }
+.rule-stack { display: grid; gap: 12px; }
 .rule-card {
   border: 1px solid var(--line);
   background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
@@ -111,6 +112,9 @@ h1 {
   border: 1px solid var(--line);
 }
 .badge.boss { color: #fff2b8; border-color: #786a36; }
+.badge.rest { color: #b9ffe0; border-color: #2d7b5f; background: rgba(45,123,95,.15); }
+.badge.checkpoint { color: #ffe7a2; border-color: #8d7133; background: rgba(141,113,51,.15); }
+.rest-rule { border-color: rgba(65, 190, 140, .28); }
 .team-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

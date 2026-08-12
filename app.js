@@ -12,6 +12,7 @@ async function init() {
 
   el("formatText").textContent = `${tower.format} · Lv.${tower.level} · IV 6V · EV 미투자`;
   el("checkpointText").textContent = tower.checkpoint_rule;
+  el("restText").textContent = tower.rest_rule;
 
   buildFloorNav();
   el("searchInput").addEventListener("input", e => {
@@ -59,6 +60,8 @@ function render() {
     <div class="badges">
       ${floor.fixed_lead ? `<span class="badge">선봉 고정: ${floor.fixed_lead}</span>` : `<span class="badge">선봉 랜덤</span>`}
       ${floor.boss ? `<span class="badge boss">BOSS FLOOR</span>` : ``}
+      ${floor.rest_after ? `<span class="badge rest">클리어 후 ${floor.floor}.5층 휴식터</span>` : ``}
+      ${floor.checkpoint_after ? `<span class="badge checkpoint">클리어 후 체크포인트</span>` : ``}
       <span class="badge">6 vs 6 싱글</span>
     </div>
   `;
