@@ -197,3 +197,9 @@ footer { border-top: 1px solid var(--line); text-align: center; padding: 30px; c
   .toolbar { align-items: stretch; }
   .search { width: 100%; }
 }
+
+.badge.ev-live {
+  color: #ffd7f6;
+  border-color: #b95aa5;
+  background: rgba(185,90,165,.16);
+}

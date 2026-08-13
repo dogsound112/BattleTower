@@ -7,11 +7,11 @@ let selectedRange = 0;
 const el = id => document.getElementById(id);
 
 async function init() {
-  const res = await fetch("data.json?v=20260814-3", { cache: "no-store" });
+  const res = await fetch("data.json?v=20260814-100f", { cache: "no-store" });
   const raw = await res.json();
   tower = raw.battle_tower;
 
-  el("formatText").textContent = `${tower.format} · Lv.${tower.level} · IV 6V · EV 미투자`;
+  el("formatText").textContent = `${tower.format} · Lv.${tower.level} · IV 6V · 1~49F EV 0 · 50~100F 실전 EV`;
   el("restText").textContent = tower.rest_rule;
 
   buildFloorNav();
@@ -33,7 +33,12 @@ function buildFloorNav() {
     [11, 20],
     [21, 30],
     [31, 40],
-    [41, 50]
+    [41, 50],
+    [51, 60],
+    [61, 70],
+    [71, 80],
+    [81, 90],
+    [91, 100]
   ];
 
   ranges.forEach(([start, end], idx) => {
@@ -91,6 +96,7 @@ function render() {
       ${floor.fixed_lead ? `<span class="badge">선봉 고정: ${floor.fixed_lead}</span>` : `<span class="badge">선봉 랜덤</span>`}
       ${floor.boss ? `<span class="badge boss">BOSS FLOOR</span>` : ``}
       ${floor.rest_after ? `<span class="badge rest">클리어 후 ${floor.floor}.5층 휴식터</span>` : ``}
+      ${floor.floor >= 50 ? `<span class="badge ev-live">실전 EV 적용</span>` : `<span class="badge">EV 미투자</span>`}
       <span class="badge">6 vs 6 싱글</span>
     </div>
   `;
