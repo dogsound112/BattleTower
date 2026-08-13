@@ -1,28 +1,38 @@
 # COBBLEVERSE Battle Tower Website
 
-이 폴더는 GitHub Pages에 바로 올릴 수 있는 정적 웹사이트입니다.
+GitHub Pages에 바로 올릴 수 있는 배틀타워 1~50층 트레이너 파티 정보 사이트입니다.
 
-## 파일
+## 포함 파일
 - `index.html` : 메인 페이지
-- `style.css` : 디자인
-- `app.js` : 층 선택/검색/데이터 렌더링
-- `data.json` : 배틀타워 데이터
+- `style.css` : 사이트 디자인
+- `app.js` : 10층 단위 탭 / 층 선택 / 검색 / 데이터 렌더링
+- `data.json` : 1~50층 고정 트레이너 파티 데이터
+- `README.md` : 배포 및 수정 안내
 
-## GitHub Pages로 공개하기
-1. GitHub에서 새 저장소(Repository)를 만듭니다.
-2. 이 ZIP의 파일 4개를 저장소 최상위(root)에 업로드합니다.
-3. GitHub 저장소에서 `Settings` → `Pages`로 이동합니다.
-4. `Build and deployment`의 Source를 `Deploy from a branch`로 선택합니다.
-5. Branch에서 `main` / `(root)`를 선택하고 Save 합니다.
-6. GitHub Pages 주소가 생성되면 누구나 그 주소로 접속할 수 있습니다.
+## 수록 범위
+- 1층~50층 고정 트레이너 파티
+- 전 포켓몬 Lv.100
+- IV 6V
+- EV 전부 0
+- 각 포켓몬 특성 / 도구 / 기술 4개 표시
+- 10층 단위 구간 선택 탭 제공
+
+## 진행 구조
+- 1~10F → 5.5F 휴식터 → 10F 체크포인트
+- 11~20F → 15.5F 휴식터 → 20F 체크포인트
+- 21~30F → 25.5F 휴식터 → 30F 체크포인트
+- 31~40F → 35.5F 휴식터 → 40F 체크포인트
+- 41~50F → 45.5F 휴식터 → 50F 체크포인트
+
+휴식터에서는 HP / 상태이상 / PP가 완전 회복되고 PC로 파티를 수정할 수 있습니다.
+휴식터는 체크포인트가 아닙니다.
+
+## GitHub Pages 배포
+1. ZIP을 풀어 `index.html`, `style.css`, `app.js`, `data.json`, `README.md`를 저장소 최상위에 업로드합니다.
+2. GitHub 저장소 `Settings` → `Pages`로 이동합니다.
+3. Source를 `Deploy from a branch`로 설정합니다.
+4. Branch는 `main`, 폴더는 `/(root)`를 선택합니다.
+5. Save 후 생성된 GitHub Pages 주소로 접속합니다.
 
 ## 데이터 수정
-`data.json`만 수정하면 사이트의 트레이너 정보도 자동으로 바뀝니다.
-
-## 1~20층 확장
-- 1~20층 고정 트레이너 파티 데이터 수록
-- 공통: Lv.100 / IV 6V / EV 0
-- 5층 클리어 후 5.5층 휴식터: HP·상태이상·PP 완전회복 + PC 파티 수정
-- 10층 클리어 후 체크포인트 저장 및 로비 귀환, 다음 도전 11층 시작
-- 15층 클리어 후 15.5층 휴식터: HP·상태이상·PP 완전회복 + PC 파티 수정
-- 20층 클리어 후 체크포인트 저장 및 로비 귀환, 다음 도전 21층 시작
+층별 파티를 바꾸려면 `data.json`만 수정하면 사이트에 자동 반영됩니다.

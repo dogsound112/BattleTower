@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>COBBLEVERSE 배틀타워</title>
-  <meta name="description" content="Cobblemon Battle Tower 트레이너 파티 정보" />
+  <meta name="description" content="Cobblemon Battle Tower 1~50층 트레이너 파티 정보" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -12,7 +12,7 @@
     <div class="hero-inner">
       <div>
         <p class="eyebrow">COBBLEMON BATTLE TOWER</p>
-        <h1>배틀타워 트레이너 정보</h1>
+        <h1>배틀타워 1~50층 트레이너 정보</h1>
         <p id="formatText" class="subtitle">불러오는 중...</p>
       </div>
       <div class="rule-stack">
@@ -30,7 +30,10 @@
 
   <main class="container">
     <section class="toolbar">
-      <div class="floor-nav" id="floorNav"></div>
+      <div class="floor-selectors">
+        <div class="range-nav" id="rangeNav"></div>
+        <div class="floor-nav" id="floorNav"></div>
+      </div>
       <label class="search">
         <span>검색</span>
         <input id="searchInput" type="search" placeholder="포켓몬 / 기술 / 특성 / 도구 검색" />

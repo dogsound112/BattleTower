@@ -66,6 +66,35 @@ h1 {
   align-items: end;
   flex-wrap: wrap;
 }
+
+.floor-selectors {
+  display: grid;
+  gap: 10px;
+}
+.range-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.range-btn {
+  border: 1px solid var(--line);
+  background: rgba(138,164,255,.06);
+  color: #b9c5e8;
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.range-btn:hover {
+  border-color: var(--accent);
+  color: white;
+}
+.range-btn.active {
+  color: #fff;
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(255,216,106,.18), rgba(138,164,255,.16));
+}
+
 .floor-nav { display: flex; gap: 8px; flex-wrap: wrap; }
 .floor-btn {
   border: 1px solid var(--line);

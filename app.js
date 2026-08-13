@@ -2,6 +2,7 @@
 let tower = null;
 let selectedFloor = 1;
 let query = "";
+let selectedRange = 0;
 
 const el = id => document.getElementById(id);
 
@@ -23,22 +24,52 @@ async function init() {
 }
 
 function buildFloorNav() {
+  const rangeNav = el("rangeNav");
   const nav = el("floorNav");
+  rangeNav.innerHTML = "";
   nav.innerHTML = "";
-  tower.floors.forEach(f => {
-    const btn = document.createElement("button");
-    btn.className = "floor-btn";
-    btn.textContent = `${f.floor}F`;
-    btn.dataset.floor = f.floor;
-    btn.onclick = () => {
-      selectedFloor = f.floor;
+
+  const ranges = [
+    [1, 10],
+    [11, 20],
+    [21, 30],
+    [31, 40],
+    [41, 50]
+  ];
+
+  ranges.forEach(([start, end], idx) => {
+    const rangeBtn = document.createElement("button");
+    rangeBtn.className = "range-btn";
+    rangeBtn.classList.toggle("active", idx === selectedRange);
+    rangeBtn.textContent = `${start}~${end}F`;
+    rangeBtn.onclick = () => {
+      selectedRange = idx;
+      selectedFloor = start;
       query = "";
       el("searchInput").value = "";
+      buildFloorNav();
       render();
-      window.scrollTo({top: 0, behavior: "smooth"});
     };
-    nav.appendChild(btn);
+    rangeNav.appendChild(rangeBtn);
   });
+
+  const [start, end] = ranges[selectedRange];
+  tower.floors
+    .filter(f => f.floor >= start && f.floor <= end)
+    .forEach(f => {
+      const btn = document.createElement("button");
+      btn.className = "floor-btn";
+      btn.textContent = `${f.floor}F`;
+      btn.dataset.floor = f.floor;
+      btn.onclick = () => {
+        selectedFloor = f.floor;
+        query = "";
+        el("searchInput").value = "";
+        render();
+        window.scrollTo({top: 0, behavior: "smooth"});
+      };
+      nav.appendChild(btn);
+    });
 }
 
 function searchableText(p) {
