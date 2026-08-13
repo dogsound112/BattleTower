@@ -7,7 +7,7 @@ let selectedRange = 0;
 const el = id => document.getElementById(id);
 
 async function init() {
-  const res = await fetch("data.json?v=20260814-100f", { cache: "no-store" });
+  const res = await fetch("data.json?v=20260814-gimmick", { cache: "no-store" });
   const raw = await res.json();
   tower = raw.battle_tower;
 
@@ -78,7 +78,7 @@ function buildFloorNav() {
 
 function searchableText(p) {
   return [
-    p.pokemon, p.ability, p.held_item, p.level, p.ivs, p.evs,
+    p.pokemon, p.ability, p.held_item, p.level, p.ivs, p.evs, p.mechanic,
     ...(p.moves || [])
   ].join(" ").toLowerCase();
 }
@@ -97,6 +97,7 @@ function render() {
       ${floor.boss ? `<span class="badge boss">BOSS FLOOR</span>` : ``}
       ${floor.rest_after ? `<span class="badge rest">클리어 후 ${floor.floor}.5층 휴식터</span>` : ``}
       ${floor.floor >= 50 ? `<span class="badge ev-live">실전 EV 적용</span>` : `<span class="badge">EV 미투자</span>`}
+      ${floor.floor >= 51 ? `<span class="badge gimmick-live">메가 · 테라 · 거다이 사용 가능</span>` : ``}
       <span class="badge">6 vs 6 싱글</span>
     </div>
   `;
@@ -118,6 +119,7 @@ function render() {
         <div class="info-item"><span class="info-label">도구</span><span class="info-value">${p.held_item}</span></div>
         <div class="info-item"><span class="info-label">개체값</span><span class="info-value">${p.ivs}</span></div>
         <div class="info-item"><span class="info-label">노력치</span><span class="info-value">${p.evs}</span></div>
+        ${p.mechanic ? `<div class="info-item mechanic-item"><span class="info-label">전투 기믹</span><span class="info-value mechanic-value">${p.mechanic}</span></div>` : ``}
       </div>
       <div class="moves">
         <h4>Moves</h4>

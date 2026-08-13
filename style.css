@@ -203,3 +203,17 @@ footer { border-top: 1px solid var(--line); text-align: center; padding: 30px; c
   border-color: #b95aa5;
   background: rgba(185,90,165,.16);
 }
+
+.badge.gimmick-live {
+  color: #d9f7ff;
+  border-color: #3a8ea6;
+  background: rgba(58,142,166,.16);
+}
+.mechanic-item {
+  grid-column: 1 / -1;
+  border-color: rgba(212,107,255,.22);
+}
+.mechanic-value {
+  color: #f0c8ff;
+  font-weight: 800;
+}
