@@ -142,7 +142,6 @@ h1 {
 }
 .badge.boss { color: #fff2b8; border-color: #786a36; }
 .badge.rest { color: #b9ffe0; border-color: #2d7b5f; background: rgba(45,123,95,.15); }
-.badge.checkpoint { color: #ffe7a2; border-color: #8d7133; background: rgba(141,113,51,.15); }
 .rest-rule { border-color: rgba(65, 190, 140, .28); }
 .team-grid {
   display: grid;
