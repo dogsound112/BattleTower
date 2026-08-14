@@ -1,36 +1,14 @@
-# COBBLEVERSE Battle Tower Website
+# COBBLEVERSE 콘텐츠 정보 사이트
 
-배틀타워 **1~100층 트레이너 파티 정보** GitHub Pages 파일입니다.
+GitHub Pages용 정적 웹사이트입니다.
 
-## 후반 규칙
-- 1~49F: Lv.100 / IV 6V / EV 미투자
-- 50~100F: Lv.100 / IV 6V / 역할별 실전 EV
-- 51~100F: **메가진화 / 테라스탈 / 다이맥스·거다이맥스 사용 가능**
-- 일부 최종 구간은 울트라버스트 등 특수 폼도 사용
-- 체크포인트 없음
+## 탭
+- `index.html` : 배틀타워 1~100층 트레이너/파티 정보
+- `worldboss.html` : 월드보스 시스템 전체 기획
 
-## 웹 표시
-각 포켓몬 카드에 아래 정보가 표시됩니다.
-- 특성
-- 도구
-- IV
-- EV
-- 기술 4개
-- 전투 기믹: 메가진화 / 테라스탈 타입 / 거다이맥스 / 울트라버스트 / 없음
+두 페이지 상단의 `[배틀타워] [월드보스]` 탭으로 이동할 수 있습니다.
 
-## 구간 탭
-1~10 / 11~20 / 21~30 / 31~40 / 41~50 /
-51~60 / 61~70 / 71~80 / 81~90 / 91~100
+## GitHub Pages 배포
+저장소 루트에 이 폴더의 파일을 업로드한 뒤 GitHub `Settings → Pages → Deploy from a branch → main / (root)`를 선택합니다.
 
-## 휴식터
-5.5F / 15.5F / 25.5F / 35.5F / 45.5F /
-55.5F / 65.5F / 75.5F / 85.5F / 95.5F
-
-## GitHub Pages 업로드
-ZIP 안의 다음 파일을 `dogsound112/BattleTower` 저장소 최상위에 덮어쓰면 됩니다.
-
-- index.html
-- style.css
-- app.js
-- data.json
-- README.md
+기존 BattleTower 저장소에 덮어쓸 경우 기존 `index.html`, `style.css`, `app.js`, `data.json`은 이 패키지 버전으로 교체하고 `worldboss.html`, `worldboss.css`를 추가하면 됩니다.

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COBBLEVERSE 콘텐츠 정보 · 월드보스</title>
+  <meta name="description" content="CobbleVerse 월드보스 시스템 기획 문서" />
+  <link rel="stylesheet" href="worldboss.css?v=20260814-content-tabs" />
+</head>
+<body>
+  <nav class="site-tabs" aria-label="콘텐츠 선택">
+    <div class="site-tabs-inner">
+      <a class="site-tab" href="index.html">⚔ 배틀타워</a>
+      <a class="site-tab active" href="worldboss.html" aria-current="page">☄ 월드보스</a>
+    </div>
+  </nav>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">COBBLEVERSE RAID CONTENT</p>
+      <h1>월드보스 시스템</h1>
+      <p class="subtitle">포켓몬은 보스를 공격하고, 월드보스는 트레이너를 공격한다.</p>
+      <div class="hero-tags">
+        <span>턴제 공격</span><span>실시간 장판 회피</span><span>공용 보스 HP</span><span>포켓몬 무적</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <a href="#concept">핵심 콘셉트</a>
+    <a href="#flow">전투 흐름</a>
+    <a href="#separation">유저/포켓몬 분리</a>
+    <a href="#patterns">패턴</a>
+    <a href="#phases">페이즈</a>
+    <a href="#rewards">기여도/보상</a>
+    <a href="#pokedex">도감</a>
+    <a href="#architecture">구현 구조</a>
+  </nav>
+
+  <main>
+    <section id="concept" class="section">
+      <div class="section-heading">
+        <span class="section-index">01</span>
+        <div><h2>핵심 콘셉트</h2><p>일반 Cobblemon 전투와 완전히 다른 대규모 협동 PvE 레이드</p></div>
+      </div>
+      <div class="quote-card">“포켓몬은 월드보스를 공격하고, 월드보스는 트레이너를 공격한다.”</div>
+      <div class="grid two">
+        <article class="card"><h3>포켓몬 역할</h3><p>공격 페이즈마다 현재 출전 포켓몬이 기술 1회를 사용한다. 포켓몬은 월드보스에게 피해를 받지 않는 완전 무적 상태다.</p></article>
+        <article class="card"><h3>트레이너 역할</h3><p>보스 패턴 페이즈에 직접 이동하면서 빨간 장판을 피한다. 회피 실패 시 플레이어 본체에 피해가 들어간다.</p></article>
+      </div>
+    </section>
+
+    <section id="flow" class="section">
+      <div class="section-heading"><span class="section-index">02</span><div><h2>기본 전투 흐름</h2><p>공격과 회피가 명확하게 번갈아 진행된다.</p></div></div>
+      <div class="flow">
+        <div class="flow-step"><b>1</b><span>월드보스 입장</span></div><div class="arrow">↓</div>
+        <div class="flow-step"><b>2</b><span>포켓몬 전투구역 배치</span></div><div class="arrow">↓</div>
+        <div class="flow-step accent"><b>3</b><span>공격 페이즈 · 기술 선택</span></div><div class="arrow">↓</div>
+        <div class="flow-step"><b>4</b><span>보스 HP 감소</span></div><div class="arrow">↓</div>
+        <div class="flow-step danger"><b>5</b><span>패턴 페이즈 · 빨간 장판</span></div><div class="arrow">↓</div>
+        <div class="flow-step"><b>6</b><span>플레이어 회피 및 피해 판정</span></div><div class="arrow">↓</div>
+        <div class="flow-step"><b>7</b><span>패턴 종료 → 다음 공격 페이즈</span></div>
+      </div>
+      <div class="note">기본은 <strong>공격 → 패턴 → 공격 → 패턴</strong>이지만, 그로기·분노·최종 페이즈에서는 공격/패턴 횟수가 달라질 수 있다.</div>
+    </section>
+
+    <section id="separation" class="section">
+      <div class="section-heading"><span class="section-index">03</span><div><h2>플레이어와 포켓몬 완전 분리</h2><p>포켓몬 탑승 및 충돌 악용을 원천 차단한다.</p></div></div>
+      <div class="arena-diagram">
+        <div class="zone pokemon-zone"><h3>포켓몬 전투구역</h3><p>P1 · P2 · P3 · P4</p><div class="boss">WORLD BOSS</div><small>포켓몬은 이 구역 내부에서만 배치/교체</small></div>
+        <div class="barrier">접근 불가 경계</div>
+        <div class="zone player-zone"><h3>플레이어 회피 아레나</h3><div class="hazards"><span></span><span></span><span></span><span></span><span></span></div><small>빨간 장판은 플레이어 구역에만 생성</small></div>
+      </div>
+      <div class="grid two">
+        <article class="card"><h3>입장 시 처리</h3><p>탑승 중이면 강제 하차 → 레이드 상태 적용 → 탑승 기능 잠금.</p></article>
+        <article class="card"><h3>이탈 방지</h3><p>플레이어와 포켓몬 모두 허용 영역을 벗어나면 지정된 안전 위치로 즉시 복귀.</p></article>
+      </div>
+      <ul class="rules">
+        <li>포켓몬 탑승 금지</li><li>포켓몬 충돌을 이용한 이동 금지</li><li>대형 포켓몬 위 올라가기 차단</li><li>소환 위치 악용 차단</li><li>플레이어의 포켓몬 구역 진입 금지</li><li>포켓몬의 플레이어 구역 진입 금지</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><span class="section-index">04</span><div><h2>레이드 입장 및 공용 HP</h2><p>모든 참가자가 하나의 월드보스를 함께 공략한다.</p></div></div>
+      <div class="grid two">
+        <article class="card"><h3>/월드보스 GUI</h3><p>현재 월드보스 · 참여하기 · 보스 정보 · 보상 · 출현 일정 · 월드보스 도감 · 내 기록</p></article>
+        <article class="card"><h3>공용 보스 HP</h3><p>예시: <strong>5,000,000 / 5,000,000</strong>. 참가자들의 모든 공격 피해량이 하나의 HP에서 차감된다.</p></article>
+      </div>
+      <div class="hp-demo"><span style="width:78%"></span><b>원시그란돈 HP 78%</b></div>
+      <p class="muted">참여 인원이 많아질수록 최대 HP가 증가하는 스케일링을 적용할 수 있다.</p>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><span class="section-index">05</span><div><h2>공격 페이즈</h2><p>기존 포켓몬 배틀의 전략성을 최대한 유지한다.</p></div></div>
+      <div class="terminal"><span class="green">⚔ 공격 기회</span><br>사용할 기술을 선택하세요.<br><span class="muted">남은 시간: 15초</span></div>
+      <div class="grid three">
+        <article class="card"><h3>기술 선택</h3><p>현재 출전 포켓몬의 4개 기술 중 하나를 선택한다.</p></article>
+        <article class="card"><h3>6마리 파티</h3><p>공격 페이즈 사이에 교체 가능. 파티 구성 자체가 보스 공략 요소가 된다.</p></article>
+        <article class="card"><h3>피해 계산</h3><p>타입·위력·공격/특공·방어/특방·상성·특성·도구·날씨·랭크·급소 등을 월드보스 전용 공식에 반영 가능.</p></article>
+      </div>
+      <div class="note">교체 시 포켓몬이 트레이너 쪽으로 돌아오는 연출은 사용하지 않고, <strong>포켓몬 전투구역 내부에서만 교체 처리</strong>한다.</div>
+    </section>
+
+    <section id="patterns" class="section">
+      <div class="section-heading"><span class="section-index">06</span><div><h2>보스 패턴 페이즈</h2><p>월드보스의 공격은 포켓몬이 아니라 트레이너를 노린다.</p></div></div>
+      <div class="terminal danger-box"><span class="red">⚠ 위험</span><br>원시그란돈이 <strong>대지분쇄</strong>를 준비합니다!</div>
+      <p>공격 예고 후 약 2~4초 동안 빨간 장판을 표시하고, 시간이 끝나면 장판 내부의 플레이어에게 피해를 준다. 장판 밖으로 이동하면 완전 회피.</p>
+      <div class="grid four pattern-grid">
+        <article class="card"><h3>대지분쇄</h3><p>거대한 원형 장판.</p></article>
+        <article class="card"><h3>단애의칼</h3><p>긴 직선 장판 여러 개.</p></article>
+        <article class="card"><h3>추적폭발</h3><p>특정 플레이어를 추적 후 위치 고정.</p></article>
+        <article class="card"><h3>십자분쇄</h3><p>아레나를 + 형태로 공격.</p></article>
+        <article class="card"><h3>용암분출</h3><p>여러 플레이어 발밑에 개별 장판.</p></article>
+        <article class="card"><h3>연속폭발</h3><p>작은 장판이 순차적으로 폭발.</p></article>
+        <article class="card"><h3>충격파</h3><p>중심에서 바깥으로 이동하는 공격.</p></article>
+        <article class="card"><h3>안전지대</h3><p>대부분이 위험지역, 일부만 안전.</p></article>
+      </div>
+      <div class="note">장판은 실제 블록을 교체하기보다 <strong>Display Entity + Particle</strong> 중심으로 표현해 원·도넛·직선·십자·부채꼴·회전 장판 등을 구현한다.</div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><span class="section-index">07</span><div><h2>플레이어 생존 및 탈락</h2><p>일반 마인크래프트 사망/아이템 드롭과 분리한다.</p></div></div>
+      <div class="life">♥ ♥ ♥ <span>→</span> ♥ ♥ <span>→</span> ♥ <span>→</span> 탈락</div>
+      <p>회피 실패로 HP가 0이 되면 레이드 생명을 1개 소모하고 잠시 전투불능 처리 후 복귀. 마지막 생명까지 소모하면 월드보스 전투에서 탈락하며 아이템은 떨어뜨리지 않는다.</p>
+    </section>
+
+    <section id="phases" class="section">
+      <div class="section-heading"><span class="section-index">08</span><div><h2>페이즈 시스템</h2><p>HP가 낮아질수록 패턴이 강해지고 공격 순서도 변화한다.</p></div></div>
+      <div class="phase-list">
+        <div class="phase"><span>100~70%</span><h3>PHASE 1</h3><p>기본 원형·직선·단일 추적 패턴</p></div>
+        <div class="phase"><span>70~40%</span><h3>PHASE 2</h3><p>패턴 2개 조합 시작</p></div>
+        <div class="phase"><span>40~10%</span><h3>PHASE 3</h3><p>강화 연출 + 패턴 속도 상승 + 신규 패턴</p></div>
+        <div class="phase final"><span>10~0%</span><h3>FINAL</h3><p>연속 복합 장판과 최종 광역 패턴</p></div>
+      </div>
+      <div class="grid three">
+        <article class="card"><h3>일반</h3><p>공격 → 패턴 → 공격</p></article>
+        <article class="card"><h3>그로기</h3><p>공격 → 공격 → 공격 → 패턴</p></article>
+        <article class="card"><h3>분노</h3><p>공격 → 패턴 → 패턴 → 공격</p></article>
+      </div>
+    </section>
+
+    <section id="rewards" class="section">
+      <div class="section-heading"><span class="section-index">09</span><div><h2>기여도 및 보상</h2><p>막타 독식 없이 정상 참여자 모두 개인 보상을 획득한다.</p></div></div>
+      <table>
+        <thead><tr><th>조건</th><th>보상 구조</th></tr></thead>
+        <tbody>
+          <tr><td>최소 기여도 달성</td><td>기본 월드보스 보상</td></tr>
+          <tr><td>높은 기여도</td><td>추가 보상</td></tr>
+          <tr><td>TOP 3</td><td>순위 보너스</td></tr>
+          <tr><td>MVP</td><td>특별 보너스</td></tr>
+          <tr><td>마지막 공격</td><td>칭호/연출 중심, 고가치 보상 X</td></tr>
+        </tbody>
+      </table>
+      <div class="ranking">
+        <div><b>🥇 Player A</b><span>1,284,320</span></div>
+        <div><b>🥈 Player B</b><span>942,150</span></div>
+        <div><b>🥉 Player C</b><span>711,820</span></div>
+        <div><b>7위 · 나</b><span>328,410</span></div>
+      </div>
+    </section>
+
+    <section id="pokedex" class="section">
+      <div class="section-heading"><span class="section-index">10</span><div><h2>월드보스 도감</h2><p>장기 수집 및 기록 콘텐츠</p></div></div>
+      <div class="grid two">
+        <article class="card"><h3>미발견</h3><p class="unknown">???</p><p>아직 만나지 않은 보스는 정보가 잠겨 있다.</p></article>
+        <article class="card"><h3>처치 후 기록</h3><p>타입 · 참가 횟수 · 처치 횟수 · 최고 피해량 · 최고 기여도 순위 · 발견/처치 여부</p></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><span class="section-index">11</span><div><h2>보스별 공략 개성</h2><p>스킨만 다른 보스가 아니라 각각 다른 전투 경험을 만든다.</p></div></div>
+      <div class="grid three">
+        <article class="card"><h3>그란돈</h3><p>지면 장판·용암·직선 분쇄 중심</p></article>
+        <article class="card"><h3>가이오가</h3><p>파도·안전지대·밀쳐내기 중심</p></article>
+        <article class="card"><h3>레쿠쟈</h3><p>직선 돌진·회전·공중 공격 중심</p></article>
+        <article class="card"><h3>디아루가</h3><p>시간 지연형 장판</p></article>
+        <article class="card"><h3>펄기아</h3><p>공간 이동·위치 교환 패턴</p></article>
+        <article class="card"><h3>울트라네크로즈마</h3><p>레이저·복합 장판 중심</p></article>
+      </div>
+    </section>
+
+    <section id="architecture" class="section">
+      <div class="section-heading"><span class="section-index">12</span><div><h2>권장 구현 구조</h2><p>일반 Cobblemon 전투 코드와 분리된 독립 월드보스 시스템</p></div></div>
+      <pre><code>WorldBossManager
+ ├─ BossInstance
+ ├─ BossArenaManager
+ ├─ BossParticipantManager
+ ├─ BossPhaseManager
+ ├─ BossPatternManager
+ ├─ BossDamageCalculator
+ ├─ BossPokemonManager
+ ├─ BossLifeManager
+ ├─ BossRewardManager
+ ├─ BossRankingManager
+ └─ BossPokedexManager</code></pre>
+      <p>각 보스는 데이터 기반으로 분리해 신규 보스·패턴·보상·페이즈를 추가하기 쉽게 설계한다.</p>
+    </section>
+
+    <section class="section final-summary">
+      <h2>현재 확정된 핵심 규칙</h2>
+      <div class="summary-grid">
+        <span>포켓몬은 무적</span><span>플레이어/포켓몬 완전 분리</span><span>포켓몬 탑승 금지</span><span>포켓몬 턴제 공격</span><span>보스는 트레이너를 공격</span><span>빨간 장판 실시간 회피</span><span>공격/패턴 페이즈 교대</span><span>공용 보스 HP</span>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>CobbleVerse World Boss Design Document</p>
+  </footer>
+</body>
+</html>
